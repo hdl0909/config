@@ -10,5 +10,28 @@
 ![image](https://github.com/user-attachments/assets/9bffe62a-ab34-46a9-9e8e-9a0e41d673a6)
 ![image](https://github.com/user-attachments/assets/fb0fba0c-2924-48d0-ba94-18a3c10bc10b)
 ![image](https://github.com/user-attachments/assets/d7e3e84c-79ee-405e-8fba-791b295e54d4)
+```
+import subprocess
+
+def list_git_objects():
+    objects = subprocess.check_output(['git', 'rev-list', '--objects', '--all']).decode().splitlines()
+    
+    for line in objects:
+        sha1, *path = line.split()
+        
+        print(f"Object SHA-1: {sha1}")
+        
+        try:
+            content = subprocess.check_output(['git', 'cat-file', '-p', sha1]).decode()
+            print(f"Contents of {sha1} ({' '.join(path) if path else 'no path'}):")
+            print(content)
+            print("-" * 40)
+        except subprocess.CalledProcessError as e:
+            print(f"Error reading object {sha1}: {e}")
+            continue
+
+list_git_objects()
+```
+![image](https://github.com/user-attachments/assets/80c55751-ec8e-4449-b682-64a606cfcaf0)
 
 
